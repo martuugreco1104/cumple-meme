@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>¿Cuánto conocés a Meme? | Edición Cumpleaños 🎂</title>
+  
+  <!-- Favicon Emoji -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Outfit"', 'sans-serif'],
+          },
+          colors: {
+            emerald: {
+              950: '#022c22',
+              900: '#064e3b',
+              800: '#065f46',
+              700: '#047857',
+              600: '#059669',
+              500: '#10b981',
+              400: '#34d399',
+              100: '#d1fae5',
+              50: '#ecfdf5',
+            },
+            orange: {
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+            }
+          },
+          animation: {
+            'bounce-subtle': 'bounceSubtle 0.8s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'slide-up': 'slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'shake': 'shake 0.4s ease-in-out',
+            'pop': 'pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+          },
+          keyframes: {
+            bounceSubtle: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-4px)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
+              '50%': { opacity: '0.9', transform: 'scale(1.05)' },
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(100%)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' },
+            },
+            shake: {
+              '0%, 100%': { transform: 'translateX(0)' },
+              '20%, 60%': { transform: 'translateX(-6px)' },
+              '40%, 80%': { transform: 'translateX(6px)' },
+            },
+            pop: {
+              '0%': { transform: 'scale(0.95)' },
+              '50%': { transform: 'scale(1.04)' },
+              '100%': { transform: 'scale(1)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* Estilos base y ergonomía táctil móvil */
+    :root {
+      --sat: env(safe-area-inset-top, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+    }
+    
+    html, body {
+      height: 100%;
+      background-color: #021a14;
+      color: #f8fafc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    /* Fondo degradado ambiental profundo */
+    .ambient-bg {
+      background: radial-gradient(circle at 50% 0%, #064e3b 0%, #022c22 45%, #02120e 100%);
+    }
+
+    /* Glassmorphism refinado */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .glass-card-subtle {
+      background: rgba(6, 78, 59, 0.25);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(52, 211, 153, 0.2);
+    }
+
+    /* Scrollbar invisible pero funcional */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Safe Area Padding */
+    .pt-safe {
+      padding-top: max(16px, env(safe-area-inset-top));
+    }
+    .pb-safe {
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+  </style>
+</head>
+<body class="ambient-bg min-h-screen flex items-center justify-center antialiased overflow-x-hidden selection:bg-orange-500 selection:text-white">
+
+  <!-- Glows ambientales decorativos -->
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none -z-10 animate-pulse-glow"></div>
+  <div class="fixed bottom-0 right-0 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+  <!-- Botón flotante de Sonido (Mute/Unmute) -->
+  <div class="fixed top-3 right-3 z-50">
+    <button id="soundToggleBtn" onclick="toggleSound()" aria-label="Alternar sonido" class="w-11 h-11 rounded-full glass-card flex items-center justify-center text-slate-200 active:scale-95 transition-all shadow-lg hover:border-emerald-400/50">
+      <span id="soundIcon" class="text-lg">🔊</span>
+    </button>
+  </div>
+
+  <!-- CONTENEDOR PRINCIPAL MOBILE FIRST -->
+  <main class="w-full max-w-md min-h-[100dvh] mx-auto flex flex-col justify-between p-4 sm:p-5 pt-safe pb-safe relative">
+
+    <!-- ======================================================== -->
+    <!-- PANTALLA 1: ONBOARDING & REGISTRO                        -->
+    <!-- ======================================================== -->
+    <section id="screenOnboarding" class="flex-1 flex flex-col justify-between transition-opacity duration-300">
+      <!-- Header / Badge & Foto Principal de Meme -->
+      <div class="text-center pt-1">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/15 border border-orange-500/30 text-orange-400 text-[11px] font-bold uppercase tracking-wider mb-3 animate-bounce-subtle">
+          <span>🎂 Meme's Birthday Special</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
+          <span>Edición 2026</span>
+        </div>
+
+        <!-- Foto Principal de Meme Mobile First -->
+        <div class="relative mx-auto w-28 h-36 sm:w-32 sm:h-40 mb-3">
+          <div class="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-emerald-400 via-teal-300 to-orange-500 animate-pulse-glow blur-sm opacity-70"></div>
+          <div class="relative w-full h-full rounded-3xl p-1 bg-gradient-to-tr from-emerald-500 to-orange-400 shadow-xl overflow-hidden">
+            <img 
+              src="img/foto principal.jpg" 
+              alt="Meme Cumpleañera" 
+              class="w-full h-full object-cover object-top rounded-[22px] border-2 border-slate-950"
+            >
+          </div>
+          <span class="absolute -bottom-2 -right-2 text-2xl filter drop-shadow">🥳</span>
+        </div>
+
+        <h1 class="font-display font-black text-2xl sm:text-3xl text-white tracking-tight leading-tight mb-1.5">
+          ¿Cuánto conocés <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-emerald-400">a Meme?</span>
+        </h1>
+        <p class="text-slate-300 text-xs sm:text-sm font-medium px-2 leading-relaxed">
+          11 preguntas picantes para separar a los amigos de verdad de los que vinieron solo por el escabio gratis. 🍸🔥
+        </p>
+      </div>
+
+      <!-- Card Central con Formulario -->
+      <div class="my-auto py-3">
+        <div class="glass-card rounded-3xl p-5 sm:p-6 shadow-2xl relative overflow-hidden">
+          <div class="absolute -top-12 -right-12 w-28 h-28 bg-emerald-500/20 rounded-full blur-xl"></div>
+          
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-xl shadow-md">
+              👑
+            </div>
+            <div>
+              <p class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Identificate</p>
+              <h2 class="text-base sm:text-lg font-bold text-white font-display">Ingresá tu nombre</h2>
+            </div>
+          </div>
+
+          <form id="onboardingForm" onsubmit="handleStartTrivia(event)" class="space-y-4">
+            <div>
+              <label for="playerNameInput" class="block text-xs font-medium text-slate-300 mb-1.5">
+                ¿Cómo te conoce Meme o cómo figura en tu DNI?
+              </label>
+              <div class="relative">
+                <input 
+                  type="text" 
+                  id="playerNameInput" 
+                  required 
+                  maxlength="26"
+                  placeholder="Ej: Luquitas, Maru, Tu ex favorito..." 
+                  autocomplete="off"
+                  class="w-full h-14 pl-4 pr-11 rounded-2xl bg-black/40 border border-white/20 text-white placeholder-slate-400 text-base font-semibold focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30 transition-all"
+                >
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">✍️</span>
+              </div>
+              <p id="nameError" class="hidden text-xs text-orange-400 mt-1 font-medium">Por favor, escribí un nombre o apodo para jugar.</p>
+            </div>
+
+            <!-- Botón Empezar -->
+            <button 
+              type="submit" 
+              class="w-full min-h-[56px] h-14 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] text-white font-bold text-base sm:text-lg shadow-lg shadow-orange-500/30 transition-all flex items-center justify-center gap-2 mt-2 font-display"
+            >
+              <span>Empezar Trivia</span>
+              <span class="text-xl">🚀</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Footer Action: Ver Podio Previo -->
+      <div class="text-center pb-2">
+        <button 
+          onclick="openLeaderboardModal()" 
+          class="inline-flex items-center gap-2 text-xs font-semibold text-emerald-300 hover:text-emerald-200 py-2 px-4 rounded-full bg-emerald-900/40 border border-emerald-500/20 active:scale-95 transition-all"
+        >
+          <span>🏆 Ver cómo viene el Podio</span>
+        </button>
+      </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- PANTALLA 2: TRIVIA EN JUEGO (STEP-BY-STEP)                -->
+    <!-- ======================================================== -->
+    <section id="screenQuiz" class="hidden flex-1 flex flex-col justify-between transition-opacity duration-300">
+      
+      <!-- Barra Superior: Progreso y Score -->
+      <div>
+        <div class="flex items-center justify-between text-xs font-bold mb-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 font-display text-xs">
+              Pregunta <span id="currentQuestionNumber">1</span> de <span id="totalQuestionsCount">11</span>
+            </span>
+            <span id="playerBadge" class="text-slate-300 truncate max-w-[120px] font-medium text-xs"></span>
+          </div>
+          <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-orange-400 font-display">
+            <span>🎯</span>
+            <span id="liveScoreCount">0</span>
+            <span class="text-[10px] text-slate-300 font-normal">pts</span>
+          </div>
+        </div>
+
+        <!-- Barra de Progreso animada -->
+        <div class="w-full h-2.5 bg-black/40 rounded-full overflow-hidden border border-white/10 p-0.5">
+          <div 
+            id="progressBarFill" 
+            class="h-full bg-gradient-to-r from-emerald-400 via-teal-300 to-orange-400 rounded-full transition-all duration-500 ease-out" 
+            style="width: 8.33%;"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Card de Pregunta -->
+      <div class="my-auto py-2">
+        <div class="glass-card rounded-3xl p-5 sm:p-6 shadow-xl border border-white/15">
+          <h2 id="questionText" class="font-display font-extrabold text-xl sm:text-2xl text-white leading-tight tracking-tight mb-5">
+            Cargando pregunta...
+          </h2>
+
+          <!-- Lista de Opciones Táctiles (min-h-[56px]) -->
+          <div id="optionsContainer" class="flex flex-col gap-2.5">
+            <!-- Las opciones se inyectan dinámicamente con JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- PANTALLA 3: PODIO FINAL, PERSISTENCIA & SHARE            -->
+    <!-- ======================================================== -->
+    <section id="screenResult" class="hidden flex-1 flex flex-col justify-between transition-opacity duration-300">
+      
+      <!-- Encabezado con Resultado -->
+      <div class="text-center pt-2">
+        <div id="resultBadge" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
+          <!-- Dinámico -->
+        </div>
+
+        <h1 class="font-display font-black text-3xl sm:text-4xl text-white tracking-tight mb-1">
+          ¡Trivia Completada!
+        </h1>
+        <p id="resultPlayerGreeting" class="text-slate-300 text-sm font-medium"></p>
+      </div>
+
+      <!-- Card de Puntaje & Mensaje Humorístico -->
+      <div class="my-4">
+        <div class="glass-card rounded-3xl p-5 shadow-2xl relative overflow-hidden text-center border border-white/15">
+          <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 bg-orange-500/20 rounded-full blur-2xl"></div>
+
+          <!-- Score circle -->
+          <div class="inline-flex flex-col items-center justify-center w-28 h-28 rounded-full bg-gradient-to-tr from-emerald-950 to-emerald-800 border-2 border-emerald-400/50 shadow-inner mb-3 relative">
+            <span id="finalScoreNumber" class="font-display font-black text-4xl text-white">0</span>
+            <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-widest">de <span id="totalQuestionsResult">11</span> aciertos</span>
+          </div>
+
+          <!-- Mensaje Personalizado según puntaje -->
+          <h3 id="resultVerdictTitle" class="font-display font-extrabold text-xl text-white mb-2 leading-tight"></h3>
+          <p id="resultVerdictDesc" class="text-slate-300 text-xs sm:text-sm leading-relaxed px-2 mb-4"></p>
+
+          <!-- CTA Principal Único y Destacado -->
+          <div class="mt-2">
+            <button 
+              onclick="shareOnWhatsApp()" 
+              class="w-full min-h-[58px] h-14 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-500 to-orange-500 hover:from-emerald-700 hover:to-orange-600 active:scale-[0.98] text-white font-extrabold text-base sm:text-lg shadow-xl shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 font-display tracking-tight"
+            >
+              <span>Mandar mi puntaje a Meme</span>
+              <span class="text-xl">📲</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de Podio / Clasificación en Vivo -->
+      <div class="mb-2">
+        <div class="flex items-center justify-between mb-2 px-1">
+          <div class="flex items-center gap-1.5">
+            <span class="text-base">🏆</span>
+            <h3 class="font-display font-bold text-sm text-white">Podio del Cumpleaños</h3>
+          </div>
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Guardado en este celu</span>
+        </div>
+
+        <div class="glass-card rounded-2xl p-2.5 max-h-52 overflow-y-auto no-scrollbar space-y-1.5 border border-white/10" id="leaderboardList">
+          <!-- Filas inyectadas con JS -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ======================================================== -->
+  <!-- MODAL / DRAWER DESLIZANTE DE FEEDBACK & FOTO             -->
+  <!-- ======================================================== -->
+  <div id="feedbackDrawerBackdrop" class="fixed inset-0 bg-black/75 backdrop-blur-md z-40 hidden opacity-0 transition-opacity duration-300 flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div 
+      id="feedbackDrawerCard" 
+      class="w-full max-w-md bg-slate-900 border-t sm:border border-white/20 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl transform translate-y-full transition-transform duration-300 ease-out max-h-[92vh] overflow-y-auto no-scrollbar"
+    >
+      <!-- Tirador táctil mobile -->
+      <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-4 sm:hidden"></div>
+
+      <!-- Estado: Correcto o Incorrecto -->
+      <div id="feedbackStatusBanner" class="flex items-center justify-between gap-2 p-3 rounded-2xl mb-4 font-display font-bold text-sm">
+        <!-- Inyectado vía JS -->
+      </div>
+
+      <!-- FOTO REFERENCIAL con Fallback Inteligente -->
+      <div class="relative w-full min-h-[220px] max-h-80 sm:max-h-96 rounded-2xl overflow-hidden bg-black/70 border border-white/15 mb-4 group shadow-inner flex items-center justify-center">
+        <!-- Imagen Real con Fallback automático si no existe todavía en img/ -->
+        <img 
+          id="questionImage" 
+          src="" 
+          alt="Foto revelada de la anécdota" 
+          class="max-h-80 sm:max-h-96 w-auto max-w-full object-contain transition-transform duration-300"
+          onerror="handleImageFallback(this)"
+        >
+
+        <!-- Placeholder fallback decorativo visual en caso de que img no esté disponible -->
+        <div id="imageFallbackPlaceholder" class="absolute inset-0 hidden flex-col items-center justify-center p-4 text-center bg-gradient-to-br from-emerald-900 via-slate-900 to-teal-950">
+          <div class="w-16 h-16 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-3xl mb-2 shadow-lg animate-bounce-subtle">
+            <span id="fallbackEmoji">📸</span>
+          </div>
+          <p id="fallbackTopicTitle" class="text-white font-display font-bold text-sm leading-tight mb-1">Foto Testimonial</p>
+          <span class="text-[11px] text-emerald-300/80 bg-emerald-500/15 px-2.5 py-1 rounded-full border border-emerald-400/30">
+            Cargando evidencia en img/
+          </span>
+        </div>
+
+        <div class="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold text-slate-200 border border-white/20 flex items-center gap-1 shadow-md">
+          <span>👀</span>
+          <span>Evidencia</span>
+        </div>
+      </div>
+
+      <!-- Comentario Humorístico -->
+      <div class="glass-card-subtle rounded-2xl p-4 mb-5 border border-emerald-500/30">
+        <div class="flex items-center gap-1.5 text-xs font-bold text-orange-400 mb-1.5 font-display">
+          <span>💬</span>
+          <span>La anécdota oficial de Meme:</span>
+        </div>
+        <p id="questionExplanation" class="text-slate-200 text-sm leading-relaxed font-medium whitespace-pre-line">
+          <!-- Inyectado vía JS -->
+        </p>
+      </div>
+
+      <!-- Contenedor con espaciado ergonómico seguro para móvil -->
+      <div class="pb-6">
+        <button 
+          id="nextQuestionBtn" 
+          onclick="goToNextQuestion()" 
+          class="w-full min-h-[56px] h-14 mb-4 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] text-white font-display font-extrabold text-base sm:text-lg shadow-lg shadow-orange-500/30 transition-all flex items-center justify-center gap-2"
+        >
+          <span>Siguiente Pregunta</span>
+          <span class="text-xl">➔</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- MODAL INDEPENDIENTE DE PODIO (ACCESIBLE DESDE SCREEN 1) -->
+  <!-- ======================================================== -->
+  <div id="leaderboardStandaloneModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-900 border border-white/20 rounded-3xl p-5 sm:p-6 shadow-2xl max-h-[85vh] flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🏆</span>
+            <h2 class="font-display font-black text-xl text-white">Tabla de Posiciones</h2>
+          </div>
+          <button onclick="closeLeaderboardModal()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-300 active:scale-95 text-lg">
+            ✕
+          </button>
+        </div>
+        <p class="text-xs text-slate-300 mb-4">Top de amigos que ya rindieron cuentas con la homenajeada:</p>
+
+        <div id="standaloneLeaderboardList" class="space-y-2 max-h-72 overflow-y-auto no-scrollbar pr-1">
+          <!-- Inyectado vía JS -->
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-white/10 mt-4 flex gap-2">
+        <button 
+          onclick="closeLeaderboardModal()" 
+          class="w-full min-h-[48px] h-12 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-all"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT: LÓGICA, AUDIO API, PREGUNTAS Y PERSISTENCIA  -->
+  <!-- ======================================================== -->
+  <script>
+    // =======================================================
+    // 1. BANCO DE PREGUNTAS (11 Preguntas)
+    // =======================================================
+    const QUESTIONS = [
+      {
+        id: 1,
+        question: "¿Qué le duró menos a Meme?",
+        options: [
+          "Ir a natación",
+          "Su celular en el pogo del Mala",
+          "La motivación para la facultad",
+          "Su último novio"
+        ],
+        correctAnswer: 3, // D) Su último novio
+        image: "img/respuesta1.jpeg",
+        fallbackEmoji: "💔",
+        topic: "Récord Guiness del desamor",
+        explanation: "Lo queremos igual eh. Pero que se ahorre revisar el Chat GPT mas que nada por Ocio/gusto"
+      },
+      {
+        id: 2,
+        question: "¿Cuál es su ley financiera cuando las tarjetas están en rojo?",
+        options: [
+          "Repetir \"soy abundancia\" y pedir comida rápida por delivery",
+          "Guardar dólares abajo del colchón",
+          "Armar un Excel con los gastos hormiga del mes",
+          "Dejar de salir a tomar algo los fines de semana"
+        ],
+        correctAnswer: 0, // A) Repetir "soy abundancia" y pedir comida rápida
+        image: "img/respuesta 2.jpg",
+        fallbackEmoji: "💳",
+        topic: "Educación Financiera de Elite",
+        explanation: "asi va a terminar meme si sigue sin pagar las tarjetas"
+      },
+      {
+        id: 3,
+        question: "Si Meme desaparece un fin de semana, ¿dónde la encontrás seguro?",
+        options: [
+          "En Quilmes",
+          "Editando para Luzu",
+          "En Vadinho (San Clemente)",
+          "No la encontrás más"
+        ],
+        correctAnswer: 2, // C) En Vadinho (San Clemente)
+        image: "img/respuesta 3.png",
+        fallbackEmoji: "🏖️",
+        topic: "Refugio Espiritual",
+        explanation: "Si algun dia quiebran es porque meme se tomo todas las consumisiones por demas"
+      },
+      {
+        id: 4,
+        question: "¿Con cuál de todos sus exs volvería?",
+        options: [
+          "Nahue",
+          "El Chino",
+          "Tomy",
+          "Jalil",
+          "Con cualquiera de todos ellos"
+        ],
+        correctAnswer: 1, // B) El Chino
+        image: "img/respuesta 4.jpg",
+        fallbackEmoji: "👀",
+        topic: "El archivo clasificado",
+        explanation: "Mentira meme no vuelvas con ninguno"
+      },
+      {
+        id: 5,
+        question: "¿Qué reliquia inmobiliaria le dejó de herencia el viejo dueño del depto de Yerbal?",
+        options: [
+          "2 reposeras Quilmes de kiosco y un freezer con cables de tela",
+          "Un juego de copas de cristal cortado",
+          "Una virgencita pegada con silicona en la pared",
+          "Un gato siamés abandonado en el placard"
+        ],
+        correctAnswer: 0, // A) 2 reposeras Quilmes y freezer con cables de tela
+        image: "img/respuesta 5.png",
+        fallbackEmoji: "🪑",
+        topic: "Decoración Vintage",
+        explanation: "Alta arqueología urbana: dos reposeras oficiales Quilmes de vereda y una heladera digna de Chernóbil con cables entelados. Patrimonio histórico nacional."
+      },
+      {
+        id: 6,
+        question: "¿Qué criterio indiscutible tiene la familia de Meme para ponerle nombre a sus gatos?",
+        options: [
+          "La carta de bebidas de un boliche hasta las 4 AM",
+          "Próceres de la historia argentina",
+          "Personajes trágicos de Shameless",
+          "Santos y vírgenes para bendecir el hogar"
+        ],
+        correctAnswer: 0, // A) Carta de bebidas hasta las 4 AM
+        image: "img/respuesta6.png",
+        fallbackEmoji: "🐱",
+        topic: "Bautismo Michi",
+        explanation: "IPA, Jager, Ron, Fernet, que falta? aperol? Vermu?"
+      },
+      {
+        id: 7,
+        question: "¿Cuál de estas bebidas deja a Meme \"ciega\"?",
+        options: [
+          "Jägermeister",
+          "Whisky",
+          "Vino con Pritty",
+          "Andes IPA"
+        ],
+        correctAnswer: 0, // A) Jägermeister
+        image: "img/respuesta 7.png",
+        fallbackEmoji: "🦌",
+        topic: "Pérdida de la Vista Temporal",
+        explanation: "Salí de fiesta con un par de amigos, viniste a molestarme\nDecías que estaba mirando otro culo, que ibas a matarme\nY yo ciego de Jäger, intentando aguantarme\nTú quieres que vaya pa' casa y yo sólo quiero quedarme"
+      },
+      {
+        id: 8,
+        question: "¿Qué personaje toma Meme como referencia cuando escabia mucho y lleva una vida insana?",
+        options: [
+          "Frank Gallagher",
+          "Homero Simpson",
+          "El Pepo",
+          "BoJack Horseman"
+        ],
+        correctAnswer: 0, // A) Frank Gallagher
+        image: "img/respuesta8.png",
+        fallbackEmoji: "🍺",
+        topic: "Ídolo Espiritual",
+        explanation: "Frank Gallagher de Shameless es su animal mitológico cuando se desmadra la noche. La supervivencia ante todo y cero arrepentimientos."
+      },
+      {
+        id: 9,
+        question: "¿Cuál es su mayor pesadilla con edesur?",
+        options: [
+          "Estar 20 días sin medidor y festejar a oscuras",
+          "Que se corte la luz en plena sesión de fotos",
+          "Que un chispazo le queme la computadora",
+          "Tener que colgarse clandestinamente de un poste"
+        ],
+        correctAnswer: 0, // A) Estar 20 días sin medidor y festejar a oscuras
+        image: "img/respuesta9.jpg",
+        fallbackEmoji: "🕯️",
+        topic: "Trauma Edesur",
+        explanation: "Cumpleaños A POCA LUUUUUUZ"
+      },
+      {
+        id: 10,
+        question: "¿Por qué insólito motivo Meme fue a final en una entrega práctica de la facu?",
+        options: [
+          "Leyó mal la consigna y entregó un video que no tenía nada que ver con lo pedido",
+          "Se quedó dormida y llegó dos horas más tarde de la entrega",
+          "Se le corrompió el render del proyecto 10 minutos antes",
+          "Se peleó a los gritos con el profesor en el pasillo de la facultad"
+        ],
+        correctAnswer: 0, // A) Leyó mal la consigna y entregó cualquier cosa
+        image: "img/respuesta10.png",
+        fallbackEmoji: "🎓",
+        topic: "Comprensión de Textos nivel 0",
+        explanation: "Dale meme que para el 2085 llegas!!!"
+      },
+      {
+        id: 11,
+        question: "Cuando Meme descubrió la IA para crear imágenes, ¿cuál fue su pedido más bizarro?",
+        options: [
+          "Una foto de ella besándose con Karol G",
+          "Un retrato de su gato vestido de astronauta",
+          "Una foto de ella recibiéndose con honores en la facultad",
+          "Un póster de Vélez campeón de la Champions League"
+        ],
+        correctAnswer: 0, // A) Besándose con Karol G
+        image: "img/respuesta 11.jpeg",
+        fallbackEmoji: "🤖",
+        topic: "La Bichota Artificial",
+        explanation: "Ellas <3 "
+      }
+    ];
+
+    // =======================================================
+    // 2. SISTEMA DE AUDIO (Web Audio API sintetizado)
+    // =======================================================
+    let audioCtx = null;
+    let isSoundMuted = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleSound() {
+      isSoundMuted = !isSoundMuted;
+      const icon = document.getElementById('soundIcon');
+      icon.textContent = isSoundMuted ? '🔇' : '🔊';
+      if (!isSoundMuted) {
+        initAudio();
+        playSfx('click');
+      }
+    }
+
+    function playSfx(type) {
+      if (isSoundMuted) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'click') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(220, now + 0.08);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      } 
+      else if (type === 'correct') {
+        // Arpegio victorioso ascendente
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          const start = now + (idx * 0.07);
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, start);
+          gain.gain.setValueAtTime(0.25, start);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.25);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(start);
+          osc.stop(start + 0.25);
+        });
+      } 
+      else if (type === 'wrong') {
+        // Buzz cómico descendente
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(190, now);
+        osc.frequency.linearRampToValueAtTime(110, now + 0.35);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      }
+      else if (type === 'finish') {
+        // Fanfarria triunfal final
+        const fanfare = [
+          { f: 523.25, t: 0.00, d: 0.12 },
+          { f: 659.25, t: 0.12, d: 0.12 },
+          { f: 783.99, t: 0.24, d: 0.15 },
+          { f: 1046.50, t: 0.40, d: 0.45 }
+        ];
+        fanfare.forEach(item => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          const start = now + item.t;
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(item.f, start);
+          gain.gain.setValueAtTime(0.3, start);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + item.d);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(start);
+          osc.stop(start + item.d);
+        });
+      }
+    }
+
+    // =======================================================
+    // 3. ESTADO DEL JUEGO & PERSISTENCIA
+    // =======================================================
+    const STORAGE_KEY = 'meme_birthday_trivia_scores_v1';
+
+    let gameState = {
+      playerName: '',
+      currentQuestionIndex: 0,
+      score: 0,
+      hasAnsweredCurrent: false
+    };
+
+    function getStoredScores() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+      } catch (e) {
+        console.error("Error leyendo localStorage:", e);
+        return [];
+      }
+    }
+
+    function saveScoreToStorage(entry) {
+      try {
+        const scores = getStoredScores();
+        scores.push(entry);
+        // Ordenar por mayor puntaje, luego más reciente
+        scores.sort((a, b) => {
+          if (b.score !== a.score) return b.score - a.score;
+          return new Date(b.date) - new Date(a.date);
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+      } catch (e) {
+        console.error("Error guardando en localStorage:", e);
+      }
+    }
+
+    // =======================================================
+    // 4. FLUJO DE PANTALLAS
+    // =======================================================
+    const screenOnboarding = document.getElementById('screenOnboarding');
+    const screenQuiz = document.getElementById('screenQuiz');
+    const screenResult = document.getElementById('screenResult');
+
+    function showScreen(screen) {
+      [screenOnboarding, screenQuiz, screenResult].forEach(s => {
+        s.classList.add('hidden');
+      });
+      screen.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleStartTrivia(e) {
+      e.preventDefault();
+      initAudio();
+      playSfx('click');
+
+      const nameInput = document.getElementById('playerNameInput');
+      const name = nameInput.value.trim();
+      const nameError = document.getElementById('nameError');
+
+      if (!name) {
+        nameError.classList.remove('hidden');
+        nameInput.focus();
+        return;
+      }
+
+      nameError.classList.add('hidden');
+      gameState.playerName = name;
+      gameState.currentQuestionIndex = 0;
+      gameState.score = 0;
+      gameState.hasAnsweredCurrent = false;
+
+      document.getElementById('playerBadge').textContent = name;
+      document.getElementById('liveScoreCount').textContent = '0';
+
+      showScreen(screenQuiz);
+      renderCurrentQuestion();
+    }
+
+    // =======================================================
+    // 5. RENDERIZADO DE PREGUNTAS
+    // =======================================================
+    function renderCurrentQuestion() {
+      gameState.hasAnsweredCurrent = false;
+      const q = QUESTIONS[gameState.currentQuestionIndex];
+      const total = QUESTIONS.length;
+      const currentNumber = gameState.currentQuestionIndex + 1;
+
+      // Actualizar progreso
+      document.getElementById('currentQuestionNumber').textContent = currentNumber;
+      const totalCountElem = document.getElementById('totalQuestionsCount');
+      if (totalCountElem) totalCountElem.textContent = total;
+
+      const progressPercent = (currentNumber / total) * 100;
+      document.getElementById('progressBarFill').style.width = `${progressPercent}%`;
+
+      // Enunciado
+      document.getElementById('questionText').textContent = q.question;
+
+      // Generar opciones barajadas aleatoriamente (shuffle para cada invitado)
+      const shuffledOptions = q.options.map((optText, origIdx) => ({
+        text: optText,
+        isCorrect: (origIdx === q.correctAnswer)
+      }));
+
+      // Algoritmo Fisher-Yates de aleatorización
+      for (let i = shuffledOptions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+      }
+
+      gameState.currentShuffledOptions = shuffledOptions;
+
+      // Generar opciones táctiles
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D', 'E'];
+
+      shuffledOptions.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `option-btn w-full min-h-[56px] py-3.5 px-4 rounded-2xl bg-white/10 hover:bg-white/15 active:scale-[0.98] border border-white/15 text-left text-white text-sm sm:text-base font-semibold transition-all duration-200 flex items-center gap-3.5 group`;
+        
+        btn.innerHTML = `
+          <span class="w-8 h-8 shrink-0 rounded-xl bg-white/10 group-hover:bg-orange-500/30 group-hover:text-orange-300 group-hover:border-orange-400/40 border border-white/20 flex items-center justify-center font-display font-bold text-xs text-slate-200 transition-colors">
+            ${letters[idx]}
+          </span>
+          <span class="flex-1 leading-snug">${opt.text}</span>
+          <span class="option-icon shrink-0 text-lg opacity-0 transition-opacity"></span>
+        `;
+
+        btn.onclick = () => handleSelectOption(idx, btn);
+        container.appendChild(btn);
+      });
+    }
+
+    // =======================================================
+    // 6. MANEJO DE RESPUESTA & DRAWER DE FOTO
+    // =======================================================
+    function handleSelectOption(selectedIndex, clickedBtn) {
+      if (gameState.hasAnsweredCurrent) return;
+      gameState.hasAnsweredCurrent = true;
+
+      const q = QUESTIONS[gameState.currentQuestionIndex];
+      const selectedOption = gameState.currentShuffledOptions[selectedIndex];
+      const isCorrect = selectedOption.isCorrect;
+      const allButtons = document.querySelectorAll('.option-btn');
+
+      // Deshabilitar todos los botones
+      allButtons.forEach((btn) => {
+        btn.disabled = true;
+        btn.classList.remove('active:scale-[0.98]', 'hover:bg-white/15');
+      });
+
+      // Feedback visual sobre opciones
+      if (isCorrect) {
+        gameState.score++;
+        document.getElementById('liveScoreCount').textContent = gameState.score;
+        playSfx('correct');
+
+        clickedBtn.classList.remove('bg-white/10', 'border-white/15');
+        clickedBtn.classList.add('bg-emerald-600/40', 'border-emerald-400', 'ring-2', 'ring-emerald-400/50', 'text-emerald-100', 'animate-pop');
+        clickedBtn.querySelector('.option-icon').textContent = '✅';
+        clickedBtn.querySelector('.option-icon').classList.remove('opacity-0');
+      } else {
+        playSfx('wrong');
+
+        clickedBtn.classList.remove('bg-white/10', 'border-white/15');
+        clickedBtn.classList.add('bg-orange-600/40', 'border-orange-500', 'ring-2', 'ring-orange-500/50', 'text-orange-100', 'animate-shake');
+        clickedBtn.querySelector('.option-icon').textContent = '❌';
+        clickedBtn.querySelector('.option-icon').classList.remove('opacity-0');
+
+        // Resaltar la correcta buscando cuál de las barajadas era la correcta
+        gameState.currentShuffledOptions.forEach((opt, idx) => {
+          if (opt.isCorrect && allButtons[idx]) {
+            allButtons[idx].classList.remove('bg-white/10', 'border-white/15');
+            allButtons[idx].classList.add('bg-emerald-600/30', 'border-emerald-400/80', 'text-emerald-200');
+            allButtons[idx].querySelector('.option-icon').textContent = '👈';
+            allButtons[idx].querySelector('.option-icon').classList.remove('opacity-0');
+          }
+        });
+      }
+
+      // Mostrar Drawer de foto y anécdota tras breve microinteracción
+      setTimeout(() => {
+        openFeedbackDrawer(isCorrect, q);
+      }, 450);
+    }
+
+    function openFeedbackDrawer(isCorrect, q) {
+      const banner = document.getElementById('feedbackStatusBanner');
+      if (isCorrect) {
+        banner.className = 'flex items-center justify-between gap-2 p-3.5 rounded-2xl mb-4 font-display font-bold text-sm bg-emerald-500/20 border border-emerald-400/40 text-emerald-200';
+        banner.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🎉</span>
+            <span>¡Acertaste! Sos de los verdaderos</span>
+          </div>
+          <span class="text-xs bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full font-black">+1 PTO</span>
+        `;
+      } else {
+        banner.className = 'flex items-center justify-between gap-2 p-3.5 rounded-2xl mb-4 font-display font-bold text-sm bg-orange-500/20 border border-orange-500/40 text-orange-200';
+        banner.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="text-xl">💀</span>
+            <span>¡Pifiaste feo! Era la otra</span>
+          </div>
+          <span class="text-xs bg-orange-500 text-white px-2 py-0.5 rounded-full font-black">0 PTO</span>
+        `;
+      }
+
+      // Configurar imagen y fallbacks
+      const imgElem = document.getElementById('questionImage');
+      const placeholder = document.getElementById('imageFallbackPlaceholder');
+      
+      // Resetear estados visuales
+      placeholder.classList.add('hidden');
+      imgElem.classList.remove('hidden');
+
+      // Asignar imagen
+      imgElem.src = q.image;
+      imgElem.alt = `Foto de la pregunta: ${q.question}`;
+
+      // Configurar datos para el fallback por si falla la carga
+      document.getElementById('fallbackEmoji').textContent = q.fallbackEmoji || '📸';
+      document.getElementById('fallbackTopicTitle').textContent = q.topic || 'Anécdota Revelada';
+
+      // Anécdota humorística
+      document.getElementById('questionExplanation').textContent = q.explanation;
+
+      // Botón Siguiente texto
+      const isLast = (gameState.currentQuestionIndex === QUESTIONS.length - 1);
+      const nextBtn = document.getElementById('nextQuestionBtn');
+      if (isLast) {
+        nextBtn.innerHTML = `<span>Ver Mi Puntaje & Podio</span><span class="text-xl">🏆</span>`;
+      } else {
+        nextBtn.innerHTML = `<span>Siguiente Pregunta</span><span class="text-xl">➔</span>`;
+      }
+
+      // Animación de entrada
+      const backdrop = document.getElementById('feedbackDrawerBackdrop');
+      const card = document.getElementById('feedbackDrawerCard');
+      backdrop.classList.remove('hidden');
+      setTimeout(() => {
+        backdrop.classList.remove('opacity-0');
+        card.classList.remove('translate-y-full');
+      }, 20);
+    }
+
+    function handleImageFallback(img) {
+      // Si la imagen local 'img/qX.jpg' no se encuentra, se oculta y se muestra el placeholder estilizado
+      img.classList.add('hidden');
+      const placeholder = document.getElementById('imageFallbackPlaceholder');
+      if (placeholder) {
+        placeholder.classList.remove('hidden');
+        placeholder.classList.add('flex');
+      }
+    }
+
+    function closeFeedbackDrawer(callback) {
+      const backdrop = document.getElementById('feedbackDrawerBackdrop');
+      const card = document.getElementById('feedbackDrawerCard');
+      
+      card.classList.add('translate-y-full');
+      backdrop.classList.add('opacity-0');
+      
+      setTimeout(() => {
+        backdrop.classList.add('hidden');
+        if (callback) callback();
+      }, 300);
+    }
+
+    function goToNextQuestion() {
+      playSfx('click');
+      closeFeedbackDrawer(() => {
+        if (gameState.currentQuestionIndex < QUESTIONS.length - 1) {
+          gameState.currentQuestionIndex++;
+          renderCurrentQuestion();
+        } else {
+          finishTrivia();
+        }
+      });
+    }
+
+    // =======================================================
+    // 7. PANTALLA FINAL, PODIO & PERSISTENCIA
+    // =======================================================
+    function finishTrivia() {
+      playSfx('finish');
+      triggerCelebrationConfetti();
+
+      const score = gameState.score;
+      const total = QUESTIONS.length;
+      const dateStr = new Date().toISOString();
+
+      // Guardar resultado
+      const entry = {
+        name: gameState.playerName,
+        score: score,
+        total: total,
+        date: dateStr
+      };
+      saveScoreToStorage(entry);
+
+      // Renderizar textos de resultado
+      document.getElementById('finalScoreNumber').textContent = score;
+      const totalResultElem = document.getElementById('totalQuestionsResult');
+      if (totalResultElem) totalResultElem.textContent = total;
+      document.getElementById('resultPlayerGreeting').textContent = `${gameState.playerName}, estos son tus resultados oficiales:`;
+
+      const badgeElem = document.getElementById('resultBadge');
+      const titleElem = document.getElementById('resultVerdictTitle');
+      const descElem = document.getElementById('resultVerdictDesc');
+
+      if (score >= 9) {
+        badgeElem.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-3 bg-emerald-500/20 border border-emerald-400 text-emerald-300';
+        badgeElem.innerHTML = `<span>👑</span><span>Nivel Dios de la Amistad</span>`;
+        titleElem.textContent = "¡Conocés a Meme más que el ARCA!";
+        descElem.textContent = "Te sabés desde las contraseñas hasta sus peores papelones a las 5 AM. Sos del círculo rojo intocable. ¡Pedile un trago ya!";
+      } else if (score >= 5) {
+        badgeElem.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-3 bg-teal-500/20 border border-teal-400 text-teal-300';
+        badgeElem.innerHTML = `<span>😎</span><span>Amigo de Onda con Honores</span>`;
+        titleElem.textContent = "Amigo de onda garantizado";
+        descElem.textContent = "Zafaste muy dignamente. Hay un par de anécdotas turbias que todavía no te contó, pero con dos birras te ponés al día.";
+      } else {
+        badgeElem.className = 'inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-3 bg-orange-500/20 border border-orange-500 text-orange-300';
+        badgeElem.innerHTML = `<span>👀</span><span>Alerta de Intruso</span>`;
+        titleElem.textContent = "Sos un desconocido total";
+        descElem.textContent = "¿Quién te pasó la dirección del festejo? Viniste de colado y se re nota. ¡Andá a saludar a la cumpleañera de inmediato!";
+      }
+
+      // Renderizar podio
+      renderLeaderboard(entry);
+
+      showScreen(screenResult);
+    }
+
+    function renderLeaderboard(currentEntry = null) {
+      const container = document.getElementById('leaderboardList');
+      const scores = getStoredScores();
+
+      if (scores.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Aún no hay puntuaciones registradas.</p>`;
+        return;
+      }
+
+      container.innerHTML = '';
+      scores.forEach((item, index) => {
+        const isCurrent = currentEntry && (item.name === currentEntry.name && item.date === currentEntry.date);
+        
+        // Medallas para el podio
+        let rankBadge = `<span class="text-slate-400 font-bold text-xs w-6 text-center">#${index + 1}</span>`;
+        let borderClass = isCurrent ? 'border-orange-500/60 bg-orange-500/10' : 'border-white/10 bg-white/5';
+
+        if (index === 0) {
+          rankBadge = `<span class="text-base w-6 text-center">🥇</span>`;
+          borderClass = isCurrent ? 'border-yellow-400 bg-yellow-500/15' : 'border-yellow-500/30 bg-yellow-500/10';
+        } else if (index === 1) {
+          rankBadge = `<span class="text-base w-6 text-center">🥈</span>`;
+          borderClass = isCurrent ? 'border-slate-300 bg-slate-300/15' : 'border-slate-400/30 bg-slate-400/10';
+        } else if (index === 2) {
+          rankBadge = `<span class="text-base w-6 text-center">🥉</span>`;
+          borderClass = isCurrent ? 'border-amber-600 bg-amber-600/15' : 'border-amber-600/30 bg-amber-600/10';
+        }
+
+        const dateObj = new Date(item.date);
+        const timeFormatted = isNaN(dateObj.getTime()) ? '' : `${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
+
+        const row = document.createElement('div');
+        row.className = `flex items-center justify-between p-2.5 rounded-xl border ${borderClass} text-xs transition-all`;
+        row.innerHTML = `
+          <div class="flex items-center gap-2.5 min-w-0">
+            ${rankBadge}
+            <div class="min-w-0">
+              <p class="font-bold text-white truncate text-xs flex items-center gap-1.5">
+                ${escapeHtml(item.name)}
+                ${isCurrent ? '<span class="text-[9px] bg-orange-500 text-white font-extrabold px-1.5 py-0.2 rounded-full uppercase">Tú</span>' : ''}
+              </p>
+              <span class="text-[10px] text-slate-400">${timeFormatted} hs</span>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="font-display font-extrabold text-sm text-emerald-300">${item.score}</span>
+            <span class="text-[10px] text-slate-400 font-medium">/ ${item.total || QUESTIONS.length}</span>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // Modal de podio independiente
+    function openLeaderboardModal() {
+      playSfx('click');
+      const container = document.getElementById('standaloneLeaderboardList');
+      const scores = getStoredScores();
+
+      if (scores.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8">
+            <span class="text-3xl mb-2 block">✨</span>
+            <p class="text-sm font-bold text-white mb-1">¡El podio está esperando!</p>
+            <p class="text-xs text-slate-400">Sé el primero en jugar y clavar tu nombre en la cima.</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = '';
+        scores.forEach((item, index) => {
+          let rankBadge = `<span class="text-slate-400 font-bold text-xs w-6 text-center">#${index + 1}</span>`;
+          if (index === 0) rankBadge = `<span class="text-lg w-6 text-center">🥇</span>`;
+          if (index === 1) rankBadge = `<span class="text-lg w-6 text-center">🥈</span>`;
+          if (index === 2) rankBadge = `<span class="text-lg w-6 text-center">🥉</span>`;
+
+          const row = document.createElement('div');
+          row.className = `flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/10 text-xs`;
+          row.innerHTML = `
+            <div class="flex items-center gap-2.5 truncate">
+              ${rankBadge}
+              <span class="font-bold text-white truncate text-sm">${escapeHtml(item.name)}</span>
+            </div>
+            <div class="text-right shrink-0">
+              <span class="font-display font-black text-base text-emerald-300">${item.score}</span>
+              <span class="text-xs text-slate-400">/ ${item.total || QUESTIONS.length}</span>
+            </div>
+          `;
+          container.appendChild(row);
+        });
+      }
+
+      const modal = document.getElementById('leaderboardStandaloneModal');
+      modal.classList.remove('hidden');
+      setTimeout(() => modal.classList.remove('opacity-0'), 20);
+    }
+
+    function closeLeaderboardModal() {
+      playSfx('click');
+      const modal = document.getElementById('leaderboardStandaloneModal');
+      modal.classList.add('opacity-0');
+      setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    // =======================================================
+    // 8. COMPARTIR & EXPORTAR
+    // =======================================================
+    function shareOnWhatsApp() {
+      playSfx('click');
+      const score = gameState.score;
+      const total = QUESTIONS.length;
+      const userName = gameState.playerName ? gameState.playerName.trim() : '';
+
+      const text = userName 
+        ? `¡Meme! Soy ${userName}. Hice tu trivia de cumple y saqué ${score}/${total} 🏆. Sé más de tus papelones que vos misma. Pagate un Jäger o una Andes IPA.`
+        : `¡Meme! Hice tu trivia de cumple y saqué ${score}/${total} 🏆. Sé más de tus papelones que vos misma. Pagate un Jäger o una Andes IPA.`;
+
+      const url = `https://api.whatsapp.com/send?phone=5491153348632&text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+
+    // =======================================================
+    // 9. ANIMACIONES (Confetti) & UTILIDADES
+    // =======================================================
+    function triggerCelebrationConfetti() {
+      if (typeof confetti !== 'function') return;
+
+      const duration = 2.5 * 1000;
+      const end = Date.now() + duration;
+
+      (function frame() {
+        confetti({
+          particleCount: 4,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0, y: 0.7 },
+          colors: ['#10b981', '#f97316', '#34d399', '#fde047', '#ffffff']
+        });
+        confetti({
+          particleCount: 4,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1, y: 0.7 },
+          colors: ['#10b981', '#f97316', '#34d399', '#fde047', '#ffffff']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Inicializar audio en cualquier primer toque de usuario
+    window.addEventListener('pointerdown', () => {
+      initAudio();
+    }, { once: true });
+  </script>
+</body>
+</html>
