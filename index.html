@@ -77,6 +77,10 @@
     }
   </script>
 
+  <!-- Firebase App & Database Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <!-- Canvas Confetti CDN -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
@@ -154,55 +158,47 @@
     <!-- PANTALLA 1: ONBOARDING & REGISTRO                        -->
     <!-- ======================================================== -->
     <section id="screenOnboarding" class="flex-1 flex flex-col justify-between transition-opacity duration-300">
-      <!-- Header / Badge & Foto Principal de Meme -->
-      <div class="text-center pt-1">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/15 border border-orange-500/30 text-orange-400 text-[11px] font-bold uppercase tracking-wider mb-3 animate-bounce-subtle">
-          <span>🎂 Meme's Birthday Special</span>
-          <span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
-          <span>Edición 2026</span>
-        </div>
+      <!-- Fondo de Pantalla Completa con Foto Principal y Dark Layer -->
+      <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <img 
+          src="img/foto principal.jpg" 
+          alt="Foto Meme Cumple" 
+          class="w-full h-full object-cover object-[center_20%] brightness-[0.35] contrast-105 scale-105"
+        >
+        <!-- Layer oscura con degradado profundo para máxima legibilidad -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/85 via-black/75 to-[#021a14]/95 backdrop-blur-[1.5px]"></div>
+      </div>
 
-        <!-- Foto Principal de Meme Mobile First -->
-        <div class="relative mx-auto w-28 h-36 sm:w-32 sm:h-40 mb-3">
-          <div class="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-emerald-400 via-teal-300 to-orange-500 animate-pulse-glow blur-sm opacity-70"></div>
-          <div class="relative w-full h-full rounded-3xl p-1 bg-gradient-to-tr from-emerald-500 to-orange-400 shadow-xl overflow-hidden">
-            <img 
-              src="img/foto principal.jpg" 
-              alt="Meme Cumpleañera" 
-              class="w-full h-full object-cover object-top rounded-[22px] border-2 border-slate-950"
-            >
-          </div>
-          <span class="absolute -bottom-2 -right-2 text-2xl filter drop-shadow">🥳</span>
-        </div>
-
-        <h1 class="font-display font-black text-2xl sm:text-3xl text-white tracking-tight leading-tight mb-1.5">
+      <!-- Header Principal -->
+      <div class="text-center pt-6 sm:pt-8">
+        <h1 class="font-display font-black text-3xl sm:text-4xl md:text-5xl text-white tracking-tight leading-tight mb-3 drop-shadow-lg">
           ¿Cuánto conocés <br>
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-emerald-400">a Meme?</span>
         </h1>
-        <p class="text-slate-300 text-xs sm:text-sm font-medium px-2 leading-relaxed">
+        <p class="text-slate-100 text-sm sm:text-base font-medium px-2 leading-relaxed drop-shadow">
           11 preguntas picantes para separar a los amigos de verdad de los que vinieron solo por el escabio gratis. 🍸🔥
         </p>
       </div>
 
       <!-- Card Central con Formulario -->
-      <div class="my-auto py-3">
-        <div class="glass-card rounded-3xl p-5 sm:p-6 shadow-2xl relative overflow-hidden">
+      <div class="my-auto py-4">
+        <div class="glass-card rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden border border-white/20 bg-black/45 backdrop-blur-xl">
           <div class="absolute -top-12 -right-12 w-28 h-28 bg-emerald-500/20 rounded-full blur-xl"></div>
           
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-xl shadow-md">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-2xl shadow-md shrink-0">
               👑
             </div>
             <div>
-              <p class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Identificate</p>
-              <h2 class="text-base sm:text-lg font-bold text-white font-display">Ingresá tu nombre</h2>
+              <p class="text-xs sm:text-sm font-bold text-emerald-400 uppercase tracking-wider">Identificate</p>
+              <h2 class="text-lg sm:text-xl font-black text-white font-display">Ingresá tu nombre</h2>
             </div>
           </div>
 
           <form id="onboardingForm" onsubmit="handleStartTrivia(event)" class="space-y-4">
             <div>
-              <label for="playerNameInput" class="block text-xs font-medium text-slate-300 mb-1.5">
-                ¿Cómo te conoce Meme o cómo figura en tu DNI?
+              <label for="playerNameInput" class="block text-sm sm:text-base font-bold text-white mb-2">
+                ¿Cómo te conoce Meme? <span class="text-xs sm:text-sm font-medium text-slate-300 block sm:inline">(Ej. Viru, Marta, Chicha)</span>
               </label>
               <div class="relative">
                 <input 
@@ -210,35 +206,25 @@
                   id="playerNameInput" 
                   required 
                   maxlength="26"
-                  placeholder="Ej: Luquitas, Maru, Tu ex favorito..." 
+                  placeholder="Ej. Viru, Marta, Chicha" 
                   autocomplete="off"
-                  class="w-full h-14 pl-4 pr-11 rounded-2xl bg-black/40 border border-white/20 text-white placeholder-slate-400 text-base font-semibold focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30 transition-all"
+                  class="w-full h-14 sm:h-16 pl-4 pr-11 rounded-2xl bg-black/60 border border-white/30 text-white placeholder-slate-400 text-base sm:text-lg font-bold focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/40 transition-all"
                 >
-                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">✍️</span>
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 text-xl">✍️</span>
               </div>
-              <p id="nameError" class="hidden text-xs text-orange-400 mt-1 font-medium">Por favor, escribí un nombre o apodo para jugar.</p>
+              <p id="nameError" class="hidden text-xs sm:text-sm text-orange-400 mt-1.5 font-bold">Por favor, escribí un nombre o apodo para jugar.</p>
             </div>
 
             <!-- Botón Empezar -->
             <button 
               type="submit" 
-              class="w-full min-h-[56px] h-14 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] text-white font-bold text-base sm:text-lg shadow-lg shadow-orange-500/30 transition-all flex items-center justify-center gap-2 mt-2 font-display"
+              class="w-full min-h-[58px] h-14 sm:h-16 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] text-white font-black text-lg sm:text-xl shadow-lg shadow-orange-500/30 transition-all flex items-center justify-center gap-2 mt-4 font-display"
             >
               <span>Empezar Trivia</span>
-              <span class="text-xl">🚀</span>
+              <span class="text-2xl">🚀</span>
             </button>
           </form>
         </div>
-      </div>
-
-      <!-- Footer Action: Ver Podio Previo -->
-      <div class="text-center pb-2">
-        <button 
-          onclick="openLeaderboardModal()" 
-          class="inline-flex items-center gap-2 text-xs font-semibold text-emerald-300 hover:text-emerald-200 py-2 px-4 rounded-full bg-emerald-900/40 border border-emerald-500/20 active:scale-95 transition-all"
-        >
-          <span>🏆 Ver cómo viene el Podio</span>
-        </button>
       </div>
     </section>
 
@@ -250,22 +236,22 @@
       
       <!-- Barra Superior: Progreso y Score -->
       <div>
-        <div class="flex items-center justify-between text-xs font-bold mb-2">
+        <div class="flex items-center justify-between text-sm font-bold mb-2.5">
           <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 font-display text-xs">
+            <span class="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 font-display text-sm font-bold">
               Pregunta <span id="currentQuestionNumber">1</span> de <span id="totalQuestionsCount">11</span>
             </span>
-            <span id="playerBadge" class="text-slate-300 truncate max-w-[120px] font-medium text-xs"></span>
+            <span id="playerBadge" class="text-slate-200 truncate max-w-[130px] font-bold text-sm"></span>
           </div>
-          <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-orange-400 font-display">
+          <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-orange-400 font-display text-sm font-bold">
             <span>🎯</span>
             <span id="liveScoreCount">0</span>
-            <span class="text-[10px] text-slate-300 font-normal">pts</span>
+            <span class="text-xs text-slate-300 font-normal">pts</span>
           </div>
         </div>
 
         <!-- Barra de Progreso animada -->
-        <div class="w-full h-2.5 bg-black/40 rounded-full overflow-hidden border border-white/10 p-0.5">
+        <div class="w-full h-3 bg-black/50 rounded-full overflow-hidden border border-white/15 p-0.5">
           <div 
             id="progressBarFill" 
             class="h-full bg-gradient-to-r from-emerald-400 via-teal-300 to-orange-400 rounded-full transition-all duration-500 ease-out" 
@@ -275,14 +261,14 @@
       </div>
 
       <!-- Card de Pregunta -->
-      <div class="my-auto py-2">
-        <div class="glass-card rounded-3xl p-5 sm:p-6 shadow-xl border border-white/15">
-          <h2 id="questionText" class="font-display font-extrabold text-xl sm:text-2xl text-white leading-tight tracking-tight mb-5">
+      <div class="my-auto py-3">
+        <div class="glass-card rounded-3xl p-5 sm:p-7 shadow-2xl border border-white/20 bg-black/40 backdrop-blur-xl">
+          <h2 id="questionText" class="font-display font-extrabold text-2xl sm:text-3xl text-white leading-snug tracking-tight mb-6">
             Cargando pregunta...
           </h2>
 
-          <!-- Lista de Opciones Táctiles (min-h-[56px]) -->
-          <div id="optionsContainer" class="flex flex-col gap-2.5">
+          <!-- Lista de Opciones Táctiles -->
+          <div id="optionsContainer" class="flex flex-col gap-3">
             <!-- Las opciones se inyectan dinámicamente con JS -->
           </div>
         </div>
@@ -301,35 +287,35 @@
           <!-- Dinámico -->
         </div>
 
-        <h1 class="font-display font-black text-3xl sm:text-4xl text-white tracking-tight mb-1">
+        <h1 class="font-display font-black text-3xl sm:text-4xl text-white tracking-tight mb-1.5">
           ¡Trivia Completada!
         </h1>
-        <p id="resultPlayerGreeting" class="text-slate-300 text-sm font-medium"></p>
+        <p id="resultPlayerGreeting" class="text-slate-200 text-base font-semibold"></p>
       </div>
 
       <!-- Card de Puntaje & Mensaje Humorístico -->
       <div class="my-4">
-        <div class="glass-card rounded-3xl p-5 shadow-2xl relative overflow-hidden text-center border border-white/15">
+        <div class="glass-card rounded-3xl p-5 sm:p-6 shadow-2xl relative overflow-hidden text-center border border-white/20 bg-black/40 backdrop-blur-xl">
           <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 bg-orange-500/20 rounded-full blur-2xl"></div>
 
           <!-- Score circle -->
-          <div class="inline-flex flex-col items-center justify-center w-28 h-28 rounded-full bg-gradient-to-tr from-emerald-950 to-emerald-800 border-2 border-emerald-400/50 shadow-inner mb-3 relative">
-            <span id="finalScoreNumber" class="font-display font-black text-4xl text-white">0</span>
-            <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-widest">de <span id="totalQuestionsResult">11</span> aciertos</span>
+          <div class="inline-flex flex-col items-center justify-center w-32 h-32 rounded-full bg-gradient-to-tr from-emerald-950 to-emerald-800 border-2 border-emerald-400/50 shadow-inner mb-3.5 relative">
+            <span id="finalScoreNumber" class="font-display font-black text-5xl text-white">0</span>
+            <span class="text-xs font-extrabold text-emerald-300 uppercase tracking-widest">de <span id="totalQuestionsResult">11</span> aciertos</span>
           </div>
 
           <!-- Mensaje Personalizado según puntaje -->
-          <h3 id="resultVerdictTitle" class="font-display font-extrabold text-xl text-white mb-2 leading-tight"></h3>
-          <p id="resultVerdictDesc" class="text-slate-300 text-xs sm:text-sm leading-relaxed px-2 mb-4"></p>
+          <h3 id="resultVerdictTitle" class="font-display font-black text-2xl sm:text-3xl text-white mb-2.5 leading-tight"></h3>
+          <p id="resultVerdictDesc" class="text-slate-100 text-sm sm:text-base leading-relaxed px-2 mb-5 font-medium"></p>
 
           <!-- CTA Principal Único y Destacado -->
           <div class="mt-2">
             <button 
               onclick="shareOnWhatsApp()" 
-              class="w-full min-h-[58px] h-14 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-500 to-orange-500 hover:from-emerald-700 hover:to-orange-600 active:scale-[0.98] text-white font-extrabold text-base sm:text-lg shadow-xl shadow-emerald-600/30 transition-all flex items-center justify-center gap-2 font-display tracking-tight"
+              class="w-full min-h-[60px] h-16 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-500 to-orange-500 hover:from-emerald-700 hover:to-orange-600 active:scale-[0.98] text-white font-black text-lg sm:text-xl shadow-xl shadow-emerald-600/40 transition-all flex items-center justify-center gap-2 font-display tracking-tight"
             >
               <span>Mandar mi puntaje a Meme</span>
-              <span class="text-xl">📲</span>
+              <span class="text-2xl">📲</span>
             </button>
           </div>
         </div>
@@ -342,7 +328,10 @@
             <span class="text-base">🏆</span>
             <h3 class="font-display font-bold text-sm text-white">Podio del Cumpleaños</h3>
           </div>
-          <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Guardado en este celu</span>
+          <span class="text-[10px] text-red-400 uppercase tracking-wider font-extrabold flex items-center gap-1.5 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full">
+            <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+            EN VIVO 🔴
+          </span>
         </div>
 
         <div class="glass-card rounded-2xl p-2.5 max-h-52 overflow-y-auto no-scrollbar space-y-1.5 border border-white/10" id="leaderboardList">
@@ -400,12 +389,12 @@
       </div>
 
       <!-- Comentario Humorístico -->
-      <div class="glass-card-subtle rounded-2xl p-4 mb-5 border border-emerald-500/30">
-        <div class="flex items-center gap-1.5 text-xs font-bold text-orange-400 mb-1.5 font-display">
+      <div class="glass-card-subtle rounded-2xl p-4 sm:p-5 mb-5 border border-emerald-500/30">
+        <div class="flex items-center gap-2 text-sm font-bold text-orange-400 mb-2 font-display">
           <span>💬</span>
           <span>La anécdota oficial de Meme:</span>
         </div>
-        <p id="questionExplanation" class="text-slate-200 text-sm leading-relaxed font-medium whitespace-pre-line">
+        <p id="questionExplanation" class="text-slate-100 text-base sm:text-lg leading-relaxed font-semibold whitespace-pre-line">
           <!-- Inyectado vía JS -->
         </p>
       </div>
@@ -415,10 +404,10 @@
         <button 
           id="nextQuestionBtn" 
           onclick="goToNextQuestion()" 
-          class="w-full min-h-[56px] h-14 mb-4 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] text-white font-display font-extrabold text-base sm:text-lg shadow-lg shadow-orange-500/30 transition-all flex items-center justify-center gap-2"
+          class="w-full min-h-[58px] h-14 sm:h-16 mb-4 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-[0.98] text-white font-display font-black text-lg sm:text-xl shadow-lg shadow-orange-500/30 transition-all flex items-center justify-center gap-2"
         >
           <span>Siguiente Pregunta</span>
-          <span class="text-xl">➔</span>
+          <span class="text-2xl">➔</span>
         </button>
       </div>
     </div>
@@ -463,6 +452,23 @@
   <!-- JAVASCRIPT: LÓGICA, AUDIO API, PREGUNTAS Y PERSISTENCIA  -->
   <!-- ======================================================== -->
   <script>
+    // =======================================================
+    // 0. FIREBASE REALTIME DATABASE CONFIGURACIÓN
+    // =======================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyC7_BAd_Ygo4ueLP8rcw5mFoO-iatrn_Qw",
+      authDomain: "cumple-meme.firebaseapp.com",
+      databaseURL: "https://cumple-meme-default-rtdb.firebaseio.com",
+      projectId: "cumple-meme",
+      storageBucket: "cumple-meme.firebasestorage.app",
+      messagingSenderId: "367202628988",
+      appId: "1:367202628988:web:93dc45a4fe4f1658dca0f9"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let currentEntryKey = null;
+
     // =======================================================
     // 1. BANCO DE PREGUNTAS (11 Preguntas)
     // =======================================================
@@ -532,12 +538,12 @@
         id: 5,
         question: "¿Qué reliquia inmobiliaria le dejó de herencia el viejo dueño del depto de Yerbal?",
         options: [
-          "2 reposeras Quilmes de kiosco y un freezer con cables de tela",
+          "2 reposeras Quilmes de kiosco",
           "Un juego de copas de cristal cortado",
           "Una virgencita pegada con silicona en la pared",
           "Un gato siamés abandonado en el placard"
         ],
-        correctAnswer: 0, // A) 2 reposeras Quilmes y freezer con cables de tela
+        correctAnswer: 0, // A) 2 reposeras Quilmes de kiosco
         image: "img/respuesta 5.png",
         fallbackEmoji: "🪑",
         topic: "Decoración Vintage",
@@ -592,12 +598,12 @@
         id: 9,
         question: "¿Cuál es su mayor pesadilla con edesur?",
         options: [
-          "Estar 20 días sin medidor y festejar a oscuras",
+          "Tener que cambiar la locacion del cumpleaños a ultimo momento para no festejar a oscuras",
           "Que se corte la luz en plena sesión de fotos",
           "Que un chispazo le queme la computadora",
           "Tener que colgarse clandestinamente de un poste"
         ],
-        correctAnswer: 0, // A) Estar 20 días sin medidor y festejar a oscuras
+        correctAnswer: 0, // A) Tener que cambiar la locacion del cumpleaños a ultimo momento para no festejar a oscuras
         image: "img/respuesta9.jpg",
         fallbackEmoji: "🕯️",
         topic: "Trauma Edesur",
@@ -739,41 +745,14 @@
     }
 
     // =======================================================
-    // 3. ESTADO DEL JUEGO & PERSISTENCIA
+    // 3. ESTADO DEL JUEGO
     // =======================================================
-    const STORAGE_KEY = 'meme_birthday_trivia_scores_v1';
-
     let gameState = {
       playerName: '',
       currentQuestionIndex: 0,
       score: 0,
       hasAnsweredCurrent: false
     };
-
-    function getStoredScores() {
-      try {
-        const data = localStorage.getItem(STORAGE_KEY);
-        return data ? JSON.parse(data) : [];
-      } catch (e) {
-        console.error("Error leyendo localStorage:", e);
-        return [];
-      }
-    }
-
-    function saveScoreToStorage(entry) {
-      try {
-        const scores = getStoredScores();
-        scores.push(entry);
-        // Ordenar por mayor puntaje, luego más reciente
-        scores.sort((a, b) => {
-          if (b.score !== a.score) return b.score - a.score;
-          return new Date(b.date) - new Date(a.date);
-        });
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
-      } catch (e) {
-        console.error("Error guardando en localStorage:", e);
-      }
-    }
 
     // =======================================================
     // 4. FLUJO DE PANTALLAS
@@ -861,14 +840,14 @@
       shuffledOptions.forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = `option-btn w-full min-h-[56px] py-3.5 px-4 rounded-2xl bg-white/10 hover:bg-white/15 active:scale-[0.98] border border-white/15 text-left text-white text-sm sm:text-base font-semibold transition-all duration-200 flex items-center gap-3.5 group`;
+        btn.className = `option-btn w-full min-h-[60px] py-4 px-4 rounded-2xl bg-white/10 hover:bg-white/15 active:scale-[0.98] border border-white/20 text-left text-white text-base sm:text-lg font-bold transition-all duration-200 flex items-center gap-3.5 group`;
         
         btn.innerHTML = `
-          <span class="w-8 h-8 shrink-0 rounded-xl bg-white/10 group-hover:bg-orange-500/30 group-hover:text-orange-300 group-hover:border-orange-400/40 border border-white/20 flex items-center justify-center font-display font-bold text-xs text-slate-200 transition-colors">
+          <span class="w-9 h-9 shrink-0 rounded-xl bg-white/15 group-hover:bg-orange-500/30 group-hover:text-orange-300 group-hover:border-orange-400/40 border border-white/25 flex items-center justify-center font-display font-black text-sm text-slate-100 transition-colors">
             ${letters[idx]}
           </span>
           <span class="flex-1 leading-snug">${opt.text}</span>
-          <span class="option-icon shrink-0 text-lg opacity-0 transition-opacity"></span>
+          <span class="option-icon shrink-0 text-xl opacity-0 transition-opacity"></span>
         `;
 
         btn.onclick = () => handleSelectOption(idx, btn);
@@ -888,7 +867,7 @@
       const isCorrect = selectedOption.isCorrect;
       const allButtons = document.querySelectorAll('.option-btn');
 
-      // Deshabilitar todos los botones
+      // Deshabilitar todos los botones para evitar doble tap
       allButtons.forEach((btn) => {
         btn.disabled = true;
         btn.classList.remove('active:scale-[0.98]', 'hover:bg-white/15');
@@ -900,54 +879,59 @@
         document.getElementById('liveScoreCount').textContent = gameState.score;
         playSfx('correct');
 
-        clickedBtn.classList.remove('bg-white/10', 'border-white/15');
-        clickedBtn.classList.add('bg-emerald-600/40', 'border-emerald-400', 'ring-2', 'ring-emerald-400/50', 'text-emerald-100', 'animate-pop');
+        clickedBtn.classList.remove('bg-white/10', 'border-white/20');
+        clickedBtn.classList.add('bg-emerald-600/50', 'border-emerald-400', 'ring-2', 'ring-emerald-400', 'text-white', 'animate-pop');
         clickedBtn.querySelector('.option-icon').textContent = '✅';
         clickedBtn.querySelector('.option-icon').classList.remove('opacity-0');
+
+        // Transición ágil si acertó
+        setTimeout(() => {
+          openFeedbackDrawer(true, q);
+        }, 750);
       } else {
         playSfx('wrong');
 
-        clickedBtn.classList.remove('bg-white/10', 'border-white/15');
-        clickedBtn.classList.add('bg-orange-600/40', 'border-orange-500', 'ring-2', 'ring-orange-500/50', 'text-orange-100', 'animate-shake');
+        clickedBtn.classList.remove('bg-white/10', 'border-white/20');
+        clickedBtn.classList.add('bg-red-600/50', 'border-red-500', 'ring-2', 'ring-red-400', 'text-white', 'animate-shake');
         clickedBtn.querySelector('.option-icon').textContent = '❌';
         clickedBtn.querySelector('.option-icon').classList.remove('opacity-0');
 
-        // Resaltar la correcta buscando cuál de las barajadas era la correcta
+        // Resaltar la correcta claramente en verde con tilde para que se vea
         gameState.currentShuffledOptions.forEach((opt, idx) => {
           if (opt.isCorrect && allButtons[idx]) {
-            allButtons[idx].classList.remove('bg-white/10', 'border-white/15');
-            allButtons[idx].classList.add('bg-emerald-600/30', 'border-emerald-400/80', 'text-emerald-200');
-            allButtons[idx].querySelector('.option-icon').textContent = '👈';
+            allButtons[idx].classList.remove('bg-white/10', 'border-white/20');
+            allButtons[idx].classList.add('bg-emerald-600/50', 'border-emerald-400', 'ring-2', 'ring-emerald-400', 'text-white', 'animate-pop');
+            allButtons[idx].querySelector('.option-icon').textContent = '✅';
             allButtons[idx].querySelector('.option-icon').classList.remove('opacity-0');
           }
         });
-      }
 
-      // Mostrar Drawer de foto y anécdota tras breve microinteracción
-      setTimeout(() => {
-        openFeedbackDrawer(isCorrect, q);
-      }, 450);
+        // Permanecer más tiempo (2.2 segundos) para que la gente (especialmente mayores) pueda ver la opción correcta
+        setTimeout(() => {
+          openFeedbackDrawer(false, q);
+        }, 2200);
+      }
     }
 
     function openFeedbackDrawer(isCorrect, q) {
       const banner = document.getElementById('feedbackStatusBanner');
       if (isCorrect) {
-        banner.className = 'flex items-center justify-between gap-2 p-3.5 rounded-2xl mb-4 font-display font-bold text-sm bg-emerald-500/20 border border-emerald-400/40 text-emerald-200';
+        banner.className = 'flex items-center justify-between gap-2 p-3.5 rounded-2xl mb-4 font-display font-black text-base sm:text-lg bg-emerald-500/20 border border-emerald-400/50 text-emerald-200';
         banner.innerHTML = `
           <div class="flex items-center gap-2">
-            <span class="text-xl">🎉</span>
+            <span class="text-2xl">🎉</span>
             <span>¡Acertaste! Sos de los verdaderos</span>
           </div>
-          <span class="text-xs bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full font-black">+1 PTO</span>
+          <span class="text-xs bg-emerald-500 text-slate-950 px-2.5 py-1 rounded-full font-black uppercase tracking-wider">+1 PTO</span>
         `;
       } else {
-        banner.className = 'flex items-center justify-between gap-2 p-3.5 rounded-2xl mb-4 font-display font-bold text-sm bg-orange-500/20 border border-orange-500/40 text-orange-200';
+        banner.className = 'flex items-center justify-between gap-2 p-3.5 rounded-2xl mb-4 font-display font-black text-base sm:text-lg bg-orange-500/20 border border-orange-500/50 text-orange-200';
         banner.innerHTML = `
           <div class="flex items-center gap-2">
-            <span class="text-xl">💀</span>
-            <span>¡Pifiaste feo! Era la otra</span>
+            <span class="text-2xl">💀</span>
+            <span>¡Pifiaste! Era la otra</span>
           </div>
-          <span class="text-xs bg-orange-500 text-white px-2 py-0.5 rounded-full font-black">0 PTO</span>
+          <span class="text-xs bg-orange-500 text-white px-2.5 py-1 rounded-full font-black uppercase tracking-wider">0 PTO</span>
         `;
       }
 
@@ -1033,16 +1017,20 @@
 
       const score = gameState.score;
       const total = QUESTIONS.length;
-      const dateStr = new Date().toISOString();
+      const userName = gameState.playerName ? gameState.playerName.trim() : "Anónimo";
 
-      // Guardar resultado
-      const entry = {
-        name: gameState.playerName,
-        score: score,
-        total: total,
-        date: dateStr
-      };
-      saveScoreToStorage(entry);
+      // Guardar en Firebase Realtime Database para podio colaborativo en vivo
+      try {
+        const newRef = db.ref('leaderboard').push({
+          name: userName || "Anónimo",
+          score: score,
+          total: total,
+          timestamp: Date.now()
+        });
+        currentEntryKey = newRef.key;
+      } catch (err) {
+        console.error("Error guardando en Firebase Realtime Database:", err);
+      }
 
       // Renderizar textos de resultado
       document.getElementById('finalScoreNumber').textContent = score;
@@ -1071,42 +1059,78 @@
         descElem.textContent = "¿Quién te pasó la dirección del festejo? Viniste de colado y se re nota. ¡Andá a saludar a la cumpleañera de inmediato!";
       }
 
-      // Renderizar podio
-      renderLeaderboard(entry);
-
       showScreen(screenResult);
     }
 
-    function renderLeaderboard(currentEntry = null) {
-      const container = document.getElementById('leaderboardList');
-      const scores = getStoredScores();
+    // =======================================================
+    // 7. PODIO EN TIEMPO REAL CON FIREBASE
+    // =======================================================
+    db.ref('leaderboard').on('value', (snapshot) => {
+      const data = snapshot.val();
+      const listContainer = document.getElementById('leaderboardList');
+      const standaloneContainer = document.getElementById('standaloneLeaderboardList');
 
-      if (scores.length === 0) {
-        container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Aún no hay puntuaciones registradas.</p>`;
+      if (!data) {
+        if (listContainer) {
+          listContainer.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Aún no hay puntuaciones registradas.</p>`;
+        }
+        if (standaloneContainer) {
+          standaloneContainer.innerHTML = `
+            <div class="text-center py-8">
+              <span class="text-3xl mb-2 block">✨</span>
+              <p class="text-sm font-bold text-white mb-1">¡El podio está esperando!</p>
+              <p class="text-xs text-slate-400">Sé el primero en jugar y clavar tu nombre en la cima.</p>
+            </div>
+          `;
+        }
         return;
       }
 
+      const entries = Object.entries(data).map(([key, val]) => ({
+        key,
+        ...val
+      }));
+
+      // Ordenar de mayor a menor puntaje; ante empate, el que jugó primero
+      entries.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return (a.timestamp || 0) - (b.timestamp || 0);
+      });
+
+      if (listContainer) {
+        renderLeaderboardRows(entries, listContainer);
+      }
+      if (standaloneContainer) {
+        renderLeaderboardRows(entries, standaloneContainer);
+      }
+    }, (error) => {
+      console.error("Error al sincronizar con Firebase Realtime Database:", error);
+    });
+
+    function renderLeaderboardRows(entries, container) {
       container.innerHTML = '';
-      scores.forEach((item, index) => {
-        const isCurrent = currentEntry && (item.name === currentEntry.name && item.date === currentEntry.date);
-        
+      entries.forEach((item, index) => {
+        const isCurrent = currentEntryKey && (item.key === currentEntryKey);
+
         // Medallas para el podio
         let rankBadge = `<span class="text-slate-400 font-bold text-xs w-6 text-center">#${index + 1}</span>`;
-        let borderClass = isCurrent ? 'border-orange-500/60 bg-orange-500/10' : 'border-white/10 bg-white/5';
+        let borderClass = isCurrent ? 'border-orange-500/60 bg-orange-500/15 ring-1 ring-orange-500/40' : 'border-white/10 bg-white/5';
 
         if (index === 0) {
           rankBadge = `<span class="text-base w-6 text-center">🥇</span>`;
-          borderClass = isCurrent ? 'border-yellow-400 bg-yellow-500/15' : 'border-yellow-500/30 bg-yellow-500/10';
+          borderClass = isCurrent ? 'border-yellow-400 bg-yellow-500/20 ring-1 ring-yellow-400/50' : 'border-yellow-500/30 bg-yellow-500/10';
         } else if (index === 1) {
           rankBadge = `<span class="text-base w-6 text-center">🥈</span>`;
-          borderClass = isCurrent ? 'border-slate-300 bg-slate-300/15' : 'border-slate-400/30 bg-slate-400/10';
+          borderClass = isCurrent ? 'border-slate-300 bg-slate-300/20 ring-1 ring-slate-300/50' : 'border-slate-400/30 bg-slate-400/10';
         } else if (index === 2) {
           rankBadge = `<span class="text-base w-6 text-center">🥉</span>`;
-          borderClass = isCurrent ? 'border-amber-600 bg-amber-600/15' : 'border-amber-600/30 bg-amber-600/10';
+          borderClass = isCurrent ? 'border-amber-600 bg-amber-600/20 ring-1 ring-amber-500/50' : 'border-amber-600/30 bg-amber-600/10';
         }
 
-        const dateObj = new Date(item.date);
-        const timeFormatted = isNaN(dateObj.getTime()) ? '' : `${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
+        const dateObj = item.timestamp ? new Date(item.timestamp) : (item.date ? new Date(item.date) : null);
+        const timeFormatted = dateObj && !isNaN(dateObj.getTime())
+          ? `${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')} hs`
+          : '';
 
         const row = document.createElement('div');
         row.className = `flex items-center justify-between p-2.5 rounded-xl border ${borderClass} text-xs transition-all`;
@@ -1114,15 +1138,15 @@
           <div class="flex items-center gap-2.5 min-w-0">
             ${rankBadge}
             <div class="min-w-0">
-              <p class="font-bold text-white truncate text-xs flex items-center gap-1.5">
-                ${escapeHtml(item.name)}
-                ${isCurrent ? '<span class="text-[9px] bg-orange-500 text-white font-extrabold px-1.5 py-0.2 rounded-full uppercase">Tú</span>' : ''}
+              <p class="font-bold text-white truncate text-xs sm:text-sm flex items-center gap-1.5">
+                ${escapeHtml(item.name || 'Anónimo')}
+                ${isCurrent ? '<span class="text-[9px] bg-orange-500 text-white font-extrabold px-1.5 py-0.2 rounded-full uppercase tracking-wider">Tú</span>' : ''}
               </p>
-              <span class="text-[10px] text-slate-400">${timeFormatted} hs</span>
+              ${timeFormatted ? `<span class="text-[10px] text-slate-400">${timeFormatted}</span>` : ''}
             </div>
           </div>
           <div class="text-right shrink-0">
-            <span class="font-display font-extrabold text-sm text-emerald-300">${item.score}</span>
+            <span class="font-display font-extrabold text-sm sm:text-base text-emerald-300">${item.score}</span>
             <span class="text-[10px] text-slate-400 font-medium">/ ${item.total || QUESTIONS.length}</span>
           </div>
         `;
@@ -1133,41 +1157,6 @@
     // Modal de podio independiente
     function openLeaderboardModal() {
       playSfx('click');
-      const container = document.getElementById('standaloneLeaderboardList');
-      const scores = getStoredScores();
-
-      if (scores.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-8">
-            <span class="text-3xl mb-2 block">✨</span>
-            <p class="text-sm font-bold text-white mb-1">¡El podio está esperando!</p>
-            <p class="text-xs text-slate-400">Sé el primero en jugar y clavar tu nombre en la cima.</p>
-          </div>
-        `;
-      } else {
-        container.innerHTML = '';
-        scores.forEach((item, index) => {
-          let rankBadge = `<span class="text-slate-400 font-bold text-xs w-6 text-center">#${index + 1}</span>`;
-          if (index === 0) rankBadge = `<span class="text-lg w-6 text-center">🥇</span>`;
-          if (index === 1) rankBadge = `<span class="text-lg w-6 text-center">🥈</span>`;
-          if (index === 2) rankBadge = `<span class="text-lg w-6 text-center">🥉</span>`;
-
-          const row = document.createElement('div');
-          row.className = `flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/10 text-xs`;
-          row.innerHTML = `
-            <div class="flex items-center gap-2.5 truncate">
-              ${rankBadge}
-              <span class="font-bold text-white truncate text-sm">${escapeHtml(item.name)}</span>
-            </div>
-            <div class="text-right shrink-0">
-              <span class="font-display font-black text-base text-emerald-300">${item.score}</span>
-              <span class="text-xs text-slate-400">/ ${item.total || QUESTIONS.length}</span>
-            </div>
-          `;
-          container.appendChild(row);
-        });
-      }
-
       const modal = document.getElementById('leaderboardStandaloneModal');
       modal.classList.remove('hidden');
       setTimeout(() => modal.classList.remove('opacity-0'), 20);
