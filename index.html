@@ -236,6 +236,16 @@
               <span>Empezar Trivia</span>
               <span class="text-2xl">🚀</span>
             </button>
+
+            <!-- Botón Ver el Podio -->
+            <button 
+              type="button" 
+              onclick="openLeaderboardModal()" 
+              class="w-full min-h-[50px] h-12 sm:h-14 rounded-2xl bg-white/10 hover:bg-white/15 active:scale-[0.98] border border-emerald-400/30 hover:border-emerald-400/60 text-white hover:text-emerald-300 font-bold text-base sm:text-lg shadow-md transition-all flex items-center justify-center gap-2 font-display"
+            >
+              <span class="text-xl">🏆</span>
+              <span>Ver el podio</span>
+            </button>
           </form>
         </div>
       </div>
@@ -430,31 +440,47 @@
   <!-- ======================================================== -->
   <!-- MODAL INDEPENDIENTE DE PODIO (ACCESIBLE DESDE SCREEN 1) -->
   <!-- ======================================================== -->
-  <div id="leaderboardStandaloneModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+  <div id="leaderboardStandaloneModal" onclick="if(event.target === this) closeLeaderboardModal()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-slate-900 border border-white/20 rounded-3xl p-5 sm:p-6 shadow-2xl max-h-[85vh] flex flex-col justify-between">
       <div>
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-2">
             <span class="text-2xl">🏆</span>
-            <h2 class="font-display font-black text-xl text-white">Tabla de Posiciones</h2>
+            <div>
+              <h2 class="font-display font-black text-xl text-white leading-tight">Podio del Cumpleaños</h2>
+              <span class="text-[10px] text-red-400 uppercase tracking-wider font-extrabold flex items-center gap-1.5 mt-0.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                EN VIVO 🔴
+              </span>
+            </div>
           </div>
-          <button onclick="closeLeaderboardModal()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-300 active:scale-95 text-lg">
+          <button onclick="closeLeaderboardModal()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-slate-300 active:scale-95 text-lg" aria-label="Cerrar podio">
             ✕
           </button>
         </div>
-        <p class="text-xs text-slate-300 mb-4">Top de amigos que ya rindieron cuentas con la homenajeada:</p>
+        <p class="text-xs text-slate-300 mb-3">Top de amigos que ya rindieron cuentas con Meme:</p>
 
         <div id="standaloneLeaderboardList" class="space-y-2 max-h-72 overflow-y-auto no-scrollbar pr-1">
-          <!-- Inyectado vía JS -->
+          <div class="text-center py-8 text-slate-400">
+            <div class="w-6 h-6 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+            <p class="text-xs">Cargando podio...</p>
+          </div>
         </div>
       </div>
 
       <div class="pt-4 border-t border-white/10 mt-4 flex gap-2">
         <button 
           onclick="closeLeaderboardModal()" 
-          class="w-full min-h-[48px] h-12 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-all"
+          class="flex-1 min-h-[48px] h-12 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 font-bold text-sm transition-all border border-white/10 active:scale-95"
         >
           Cerrar
+        </button>
+        <button 
+          onclick="closeLeaderboardModal(); document.getElementById('playerNameInput').focus();" 
+          class="flex-1 min-h-[48px] h-12 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-95 text-white font-bold text-sm transition-all shadow-md flex items-center justify-center gap-1.5 font-display"
+        >
+          <span>Jugar ahora</span>
+          <span>🚀</span>
         </button>
       </div>
     </div>
